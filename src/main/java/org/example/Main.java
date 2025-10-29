@@ -2,16 +2,24 @@ package org.example;
 import org.example.dao.*;
 import org.example.entity.Customer;
 import org.example.entity.Product;
+import org.example.services.CustomerServices;
+import org.example.services.ProductServices;
+
 import java.util.Scanner;
 public class Main {
-    public static void main(String[] args)  {
-        System.out.println("--------------------welcome to zmazoa---------------------");
-        Scanner sc= new Scanner(System.in);
 
-        // Creating objects for implementing classes in dao
-        CustomerDao customerDao = new CustomerDaoImpl();
-        ProductDao productDao = new ProductDaoImpl();
-        OrderProcessRepository orderProcessRepository = new OrderProcessRepositoryImpl();
+    static Scanner sc = new Scanner(System.in);
+
+    // Creating objects for implementing classes in dao
+    static CustomerDao customerDao = new CustomerDaoImpl();
+    static ProductDao productDao = new ProductDaoImpl();
+    static OrderProcessRepository orderProcessRepository = new OrderProcessRepositoryImpl();
+
+    static CustomerServices customerService = new CustomerServices();
+    static ProductServices productServices = new ProductServices();
+
+    public static void main(String[] args) {
+        System.out.println("--------------------welcome to zmazoa---------------------");
 
         Customer customer = null;
         String userType = null;
@@ -34,7 +42,7 @@ public class Main {
                     customer = customerDao.loginCustomer();
                 }
                 else if(n == 2) {
-                    customerDao.registerCustomer();
+                    customerService.registerCustomer();
                     customer = customerDao.loginCustomer();
                 }
                 userType = "customer";
@@ -108,8 +116,42 @@ public class Main {
 //        }
     }
 
-    public static void customerInterface(Customer customer) {
+    static void customerInterface(Customer customer) {
+        while(true) {
+            System.out.println("""
+                    1. Browse Products
+                    2. Search by name
+                    3. Search by category
+                    4. View Cart
+                    5. Back
+                    """);
+            int n = sc.nextInt();
 
+            switch (n) {
+                case 1: {
+                    Product[] products = productServices.browseProducts();
+                    productServices.listProducts(products);
+                    break;
+                }
+                case 2: {
+                    System.out.print("Search: ");
+                    String term = sc.nextLine();
+                    Product[] products = productServices.searchByName(term);
+                    productServices.listProducts(products);
+                    break;
+                }
+                case 3: {
+                    System.out.println("Search: ");
+                    String term = sc.nextLine();
+                    Product[] products = productServices.searchByCategory(term);
+                    productServices.listProducts(products);
+                    break;
+                }
+                case 5: {
+                    return;
+                }
+            }
+        }
     }
 
     public static void adminInterface() {

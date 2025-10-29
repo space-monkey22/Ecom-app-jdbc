@@ -44,33 +44,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public boolean registerCustomer() {
-        System.out.println("------Register Customer------\n");
-        System.out.print("Name: ");
-        String name = sc.nextLine();
-
-        System.out.print("Email: ");
-        String email = sc.next();
-
-        System.out.print("Phone: ");
-        String phone = sc.next();
-
-        System.out.print("Password: ");
-        String pwd = sc.next();
-
-        while(true) {
-            System.out.print("Re-enter password: ");
-            String rePWD = sc.next();
-
-            if(pwd.equals(rePWD)) {
-                System.out.println("Passwords match!");
-                break;
-            }
-            else {
-                System.out.println("Passwords don't match, try again.");
-            }
-        }
-
+    public boolean addCustomer(String name, String email, String phone, String pwd) {
         try {
             Connection conn = DBConnectionUtil.getConnection();
             String sql = "insert into customers(name, email, phone, password) values (?, ?, ?, ?)";
