@@ -1,4 +1,4 @@
 package org.example.dao;
 
-public class OrderProcessRepositoryImpl {
+public class OrderProcessRepositoryImpl implements OrderProcessRepository{
 }
