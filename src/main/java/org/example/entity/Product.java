@@ -6,21 +6,23 @@ public class Product {
     private String desc;
     private double price;
     private int quantity;
-
+    private String category;
     public Product(){
     }
-    public Product(String pname,double price,String desc,int quantity){
+    public Product(String pname,double price,String desc,int quantity,String category){
         this.pname=pname;
         this.price=price;
         this.desc=desc;
         this.quantity=quantity;
+        this.category=category;
     }
-    public Product(long product_id,String pname,double price,String desc,int quantity){
+    public Product(long product_id,String pname,double price,String desc,int quantity,String category){
         this.pname=pname;
         this.price=price;
         this.desc=desc;
         this.quantity=quantity;
         this.product_id= product_id;
+        this.category=category;
     }
 
     public String getPname() {
@@ -60,6 +62,14 @@ public class Product {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
