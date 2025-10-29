@@ -4,5 +4,8 @@ import org.example.entity.Customer;
 
 public interface CustomerDao{
 
-    boolean addCustomer(Customer name);
+    public Customer loginCustomer();
+    public boolean registerCustomer();
+
+    // boolean addCustomer(Customer name);
 }

@@ -4,19 +4,17 @@ public class Customer {
     private String customer_name;
     private long customer_id;
     private String customer_email;
-    private String customer_password;
 
     public Customer(){}
-    public Customer(String customer_name,long customer_id,String customer_email,String customer_password){
-        this.customer_email=customer_email;
-        this.customer_name=customer_name;
-        this.customer_id=customer_id;
-        this.customer_password=customer_password;
+
+    public Customer(String customer_name, long customer_id, String customer_email){
+        this.customer_email = customer_email;
+        this.customer_name = customer_name;
+        this.customer_id = customer_id;
     }
-    public Customer(String customer_name,String customer_email,String customer_password){
-        this.customer_email=customer_email;
-        this.customer_name=customer_name;
-        this.customer_password=customer_password;
+    public Customer(String customer_name, String customer_email){
+        this.customer_email = customer_email;
+        this.customer_name = customer_name;
     }
 
     public long getCustomer_id() {
@@ -34,12 +32,12 @@ public class Customer {
         this.customer_email = customer_email;
     }
 
-    public String getCustomer_password() {
-        return customer_password;
-    }
-    public void setCustomer_password(String customer_password) {
-        this.customer_password = customer_password;
-    }
+//    public String getCustomer_password() {
+//        return customer_password;
+//    }
+//    public void setCustomer_password(String customer_password) {
+//        this.customer_password = customer_password;
+//    }
 
     public String getCustomer_name() {
         return customer_name;
@@ -54,7 +52,6 @@ public class Customer {
         return
                 "customer_name='" + customer_name + '\'' +
                 ", customer_id=" + customer_id +
-                ", customer_email='" + customer_email + '\'' +
-                ", customer_password='" + customer_password ;
+                ", customer_email='" + customer_email ;
     }
 }
