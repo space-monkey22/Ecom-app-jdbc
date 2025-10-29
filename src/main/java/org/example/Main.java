@@ -3,9 +3,10 @@ import org.example.dao.*;
 import org.example.entity.Customer;
 import org.example.entity.Product;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         System.out.println("--------------------welcome to zmazoa---------------------");
         Scanner sc= new Scanner(System.in);
         //creating objects for implementing classes in dao
@@ -40,11 +41,14 @@ public class Main {
                 String pname= sc.next();
                 System.out.println("enter the price:");
                 double price= sc.nextDouble();
+                System.out.println("enter the product category:");
+                String category= sc.next();
                 System.out.println("enter description:");
                 String desc= sc.next();
                 System.out.println("enter the stock quantity:");
                 int quantity= sc.nextInt();
-                Product item= new Product(pname,price,desc,quantity);
+
+                Product item= new Product(pname,price,desc,quantity,category);
                 productdao.addProduct(item);
                 break;
             case "3":
