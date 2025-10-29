@@ -1,4 +1,8 @@
 package org.example.dao;
 
-public class customerDAO {
+import org.example.entity.Customer;
+
+public interface CustomerDao{
+
+    boolean addCustomer(Customer name);
 }
