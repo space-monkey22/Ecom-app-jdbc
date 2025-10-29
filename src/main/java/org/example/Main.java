@@ -2,15 +2,9 @@ package org.example;
 import org.example.dao.*;
 import org.example.entity.Customer;
 import org.example.entity.Product;
-import org.example.util.DBConnectionUtil;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Scanner;
 public class Main {
-    public static void main(String[] args) {
-
+    public static void main(String[] args)  {
         System.out.println("--------------------welcome to zmazoa---------------------");
         Scanner sc= new Scanner(System.in);
 
