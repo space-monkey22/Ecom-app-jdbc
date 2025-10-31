@@ -14,7 +14,7 @@ public class CustomerServices {
     Scanner sc = new Scanner(System.in);
 
     public void registerCustomer() {
-        System.out.println("------Register Customer------\n");
+        System.out.println("\u001B[34m------Sign up------\u001B[0m\n");
         System.out.print("Name: ");
         String name = sc.nextLine();
 
@@ -36,7 +36,7 @@ public class CustomerServices {
                 break;
             }
             else {
-                System.out.println("Passwords don't match, try again.");
+                System.out.println("\u001B[31mPasswords don't match, try again.\u001B[0m");
             }
         }
         if(customerDao.addCustomer(name, email, phone, pwd)) {
