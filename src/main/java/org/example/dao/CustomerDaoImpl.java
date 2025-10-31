@@ -11,11 +11,11 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public Customer loginCustomer() {
-        System.out.println("------Login Customer------\n");
+        System.out.println("\u001B[34m------Customer Login------\u001B[0m\n");
         System.out.print("Enter email: ");
         String email = sc.next();
 
-        System.out.println("Enter password: ");
+        System.out.print("Enter password: ");
         String pwd = sc.next();
 
         try {

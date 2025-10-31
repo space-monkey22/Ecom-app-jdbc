@@ -15,17 +15,15 @@ public class ProductServices {
     Scanner sc = new Scanner(System.in);
 
     public Product[] searchByName(String name) {
-        try {
-            Connection conn = DBConnectionUtil.getConnection();
-        } catch(SQLException | ClassNotFoundException e) {
-            throw new RuntimeException();
-        }
-        return new Product[0];
+        String lowerName = name.toLowerCase();
+        Product[] products = productDao.fetchProducts("name", lowerName);
+        return products;
     }
 
     public Product[] searchByCategory(String category) {
-
-        return new Product[0];
+        String lowerCategory = category.toLowerCase();
+        Product[] products = productDao.fetchProducts("category", lowerCategory);
+        return products;
     }
 
     public Product[] browseProducts() {
@@ -34,12 +32,14 @@ public class ProductServices {
     }
 
     public void listProducts(Product[] products) {
+        System.out.println("\n------" + products.length + " result(s) were found------");
         while(true) {
+            System.out.println();
             for (int i = 0; i < products.length; i++) {
                 System.out.println((i + 1) + ". " + products[i].getPname() + " | " + products[i].getPrice());
             }
 
-            System.out.print("100.Back\n Select product: ");
+            System.out.print("100.Back\n\nSelect product: ");
             int n = sc.nextInt();
 
             if(n == 100) return;
@@ -49,10 +49,12 @@ public class ProductServices {
     }
 
     public void productDetails(Product product) {
+        System.out.println("------------------------");
         System.out.println("Product id: " + product.getProduct_id());
         System.out.println("Name: " + product.getPname());
         System.out.println("Price: " + product.getPrice());
         System.out.println("Description: " + product.getDesc());
+        System.out.println("------------------------");
 
         if(product.getQuantity() < 5) {
             System.out.println("\u001B[31m Only " + product.getQuantity() + " left in stock!\u001B[0m");
