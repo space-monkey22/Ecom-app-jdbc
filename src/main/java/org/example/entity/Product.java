@@ -1,42 +1,45 @@
 package org.example.entity;
 
 public class Product {
-    private long product_id;
+
+    private int product_id;
     private String pname;
     private String desc;
     private double price;
     private int quantity;
     private String category;
-    public Product(){
+
+    public Product() {}
+
+    public Product(String pname, double price, String desc, int quantity, String category) {
+        this.pname = pname;
+        this.price = price;
+        this.desc = desc;
+        this.quantity = quantity;
+        this.category = category;
     }
-    public Product(String pname,double price,String desc,int quantity,String category){
-        this.pname=pname;
-        this.price=price;
-        this.desc=desc;
-        this.quantity=quantity;
-        this.category=category;
-    }
-    public Product(long product_id,String pname,double price,String desc,int quantity,String category){
-        this.pname=pname;
-        this.price=price;
-        this.desc=desc;
-        this.quantity=quantity;
-        this.product_id= product_id;
-        this.category=category;
+    public Product(int product_id, String pname, double price, String desc, int quantity, String category){
+        this.pname = pname;
+        this.price = price;
+        this.desc = desc;
+        this.quantity = quantity;
+        this.product_id = product_id;
+        this.category = category;
     }
 
     public String getPname() {
         return pname;
     }
+
     public void setPname(String pname) {
         this.pname = pname;
     }
 
-    public long getProduct_id() {
+    public int getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(long product_id) {
+    public void setProduct_id(int product_id) {
         this.product_id = product_id;
     }
 

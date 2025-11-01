@@ -4,8 +4,9 @@ import org.example.entity.Customer;
 
 public interface CustomerDao{
 
-    public Customer loginCustomer();
+    public Customer authorizeUser(String email, String pwd);
     public boolean addCustomer(String name, String email, String phone, String pwd);
-
-    // boolean addCustomer(Customer name);
+    public boolean deleteCustomer(String id);
+    public boolean updateCustomer(String id, Customer customer);
+    public Customer fetchCustomer(String id);
 }
