@@ -2,12 +2,12 @@ package org.example.entity;
 
 public class Customer {
     private String customer_name;
-    private long customer_id;
+    private int customer_id;
     private String customer_email;
 
     public Customer(){}
 
-    public Customer(String customer_name, long customer_id, String customer_email){
+    public Customer(String customer_name, int customer_id, String customer_email){
         this.customer_email = customer_email;
         this.customer_name = customer_name;
         this.customer_id = customer_id;
@@ -17,15 +17,11 @@ public class Customer {
         this.customer_name = customer_name;
     }
 
-    public long getCustomer_id() {
+    public int getCustomerId() {
         return customer_id;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
-    }
-
-    public String getCustomer_email() {
+    public String getCustomerEmail() {
         return customer_email;
     }
     public void setCustomer_email(String customer_email) {
