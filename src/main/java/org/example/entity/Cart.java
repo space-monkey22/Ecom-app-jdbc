@@ -1,31 +1,33 @@
 package org.example.entity;
 
 public class Cart {
-    private int cartid;
-    private int customerid;
+
+    private int cartId;
+    private int customerId;
     private double total;
-    private int purchased;
-    public Cart(int cartid,int customerid,double total,int purchased){
-        this.cartid= cartid;
-        this.customerid=customerid;
-        this.total=total;
-        this.purchased=purchased;
+    private boolean purchased;
+
+    public Cart(int cartId,int customerId,double total,boolean purchased){
+        this.cartId= cartId;
+        this.customerId = customerId;
+        this.total = total;
+        this.purchased = purchased;
     }
 
-    public int getCartid() {
-        return cartid;
+    public int getCartId() {
+        return cartId;
     }
 
-    public void setCartid(int cartid) {
-        this.cartid = cartid;
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
     }
 
-    public int getCustomerid() {
-        return customerid;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerid(int customerid) {
-        this.customerid = customerid;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public double getTotal() {
@@ -36,11 +38,11 @@ public class Cart {
         this.total = total;
     }
 
-    public int getPurchased() {
+    public boolean getPurchased() {
         return purchased;
     }
 
-    public void setPurchased(int purchased) {
+    public void setPurchased(boolean purchased) {
         this.purchased = purchased;
     }
 }

@@ -14,11 +14,12 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    // Creating objects for implementing classes in dao
+    // Dao objects creation
     static CustomerDao customerDao = new CustomerDaoImpl();
     static ProductDao productDao = new ProductDaoImpl();
     static OrderProcessRepository orderProcessRepository = new OrderProcessRepositoryImpl();
 
+    // Service objects creation
     static CustomerServices customerService = new CustomerServices();
     static ProductServices productServices = new ProductServices();
 
@@ -29,50 +30,54 @@ public class Main {
         String userType = null;
 
         // The menu
-        System.out.println("""
-                Login as:
-                1. Customer
-                2. Admin
-                """);
+        while(true) {
+            System.out.println("""
+                    Login as:
+                    1. Customer
+                    2. Admin
+                    
+                    3. Exit
+                    """);
 
-        int user = sc.nextInt();
+            int user = sc.nextInt();
+            switch (user) {
+                case 1:
+                    System.out.println("1. Login\n2. Register");
+                    int n = sc.nextInt();
 
-        switch(user) {
-            case 1:
-                System.out.println("1. Login\n2. Register");
-                int n = sc.nextInt();
-
-                if(n == 1) {
-                    customer = customerDao.loginCustomer();
-                }
-                else if(n == 2) {
-                    customerService.registerCustomer();
-                    customer = customerDao.loginCustomer();
-                }
-                userType = "customer";
-                break;
-
-            case 2:
-                while(true) {
-                    System.out.print("Enter password: ");
-                    String pwd = sc.next();
-
-                    if(pwd.equals("admin123")) {
-                        System.out.println("\nAdmin Login Successful!\n");
-                        userType = "admin";
-                        break;
-                    } else {
-                        System.out.println("Wrong password, try again.");
+                    if (n == 1) {
+                        customer = customerService.loginCustomer();
+                    } else if (n == 2) {
+                        customerService.registerCustomer();
+                        customer = customerService.loginCustomer();
                     }
-                }
-                break;
-        }
+                    userType = "customer";
+                    break;
 
-        if(userType.equals("customer")) {
-            customerInterface(customer);
-        }
-        else if(userType.equals("admin")) {
-            adminInterface();
+                case 2:
+                    while (true) {
+                        System.out.print("Enter password: ");
+                        String pwd = sc.next();
+
+                        if (pwd.equals("admin123")) {
+                            System.out.println("\nAdmin Login Successful!\n");
+                            userType = "admin";
+                            break;
+                        } else {
+                            System.out.println("Wrong password, try again.");
+                        }
+                    }
+                    break;
+
+                case 3:
+                    return;
+            }
+
+            if (userType.equals("customer")) {
+                customerInterface(customer);
+            } else if (userType.equals("admin")) {
+                adminInterface();
+            }
         }
     }
 
@@ -81,7 +86,7 @@ public class Main {
         while(true) {
             System.out.println(
                     """
-                    \n
+                        
                     1. Browse Products
                     2. Search by name
                     3. Search by category
@@ -90,17 +95,18 @@ public class Main {
                     """);
             int n = sc.nextInt();
 
+            // TODO: View Cart Case for Customer
             switch (n) {
                 case 1: {
                     Product[] products = productServices.browseProducts();
-                    productServices.listProducts(products);
+                    productServices.listProducts(products, customer);
                     break;
                 }
                 case 2: {
                     System.out.print("Search: ");
                     String term = br.readLine();
                     Product[] products = productServices.searchByName(term);
-                    productServices.listProducts(products);
+                    productServices.listProducts(products, customer);
                     break;
                 }
                 case 3: {
@@ -108,7 +114,7 @@ public class Main {
                     String term = br.readLine();
                     Product[] products = productServices.searchByCategory(term);
 
-                    productServices.listProducts(products);
+                    productServices.listProducts(products, customer);
                     break;
                 }
                 case 5: {
@@ -118,6 +124,7 @@ public class Main {
         }
     }
 
+    // TODO: Admin Interface implementation
     public static void adminInterface() {
 
     }

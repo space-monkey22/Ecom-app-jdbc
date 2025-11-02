@@ -10,14 +10,8 @@ public class CustomerDaoImpl implements CustomerDao {
     Scanner sc = new Scanner(System.in);
 
     @Override
-    public Customer loginCustomer() {
-        System.out.println("\u001B[34m------Customer Login------\u001B[0m\n");
-        System.out.print("Enter email: ");
-        String email = sc.next();
-
-        System.out.print("Enter password: ");
-        String pwd = sc.next();
-
+    public Customer authorizeUser(String email, String pwd) {
+        Customer customer = null;
         try {
             Connection conn = DBConnectionUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement("Select * from customers");
@@ -25,22 +19,21 @@ public class CustomerDaoImpl implements CustomerDao {
 
             while(customers.next()) {
                 if(email.equals(customers.getString("email"))
-                                    && pwd.equals(customers.getString("password"))) {
-                    long id = customers.getInt("customer_id");
+                        && pwd.equals(customers.getString("password"))) {
+                    int id = customers.getInt("customer_id");
                     String name = customers.getString("name");
-                    System.out.println("\nCustomer Login Successful!\n");
-                    return new Customer(name, id, email);
+                    customer = new Customer(name, id, email);
                 }
             }
 
-            conn.close();
+            ps.close();
             customers.close();
+
+            return customer;
 
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     @Override
@@ -56,10 +49,29 @@ public class CustomerDaoImpl implements CustomerDao {
             ps.setString(4, pwd);
 
             ps.executeUpdate();
+            ps.close();
 
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         return true;
+    }
+
+    // TODO: Delete customer functionality
+    @Override
+    public boolean deleteCustomer(String id) {
+        return false;
+    }
+
+    // TODO: Update customer functionality
+    @Override
+    public boolean updateCustomer(String id, Customer customer) {
+        return false;
+    }
+
+    // TODO: Fetch customer functionality
+    @Override
+    public Customer fetchCustomer(String id) {
+        return null;
     }
 }
