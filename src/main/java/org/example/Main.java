@@ -1,11 +1,9 @@
 package org.example;
-import org.example.dao.*;
 import org.example.entity.Customer;
 import org.example.entity.Product;
 import org.example.services.CartServices;
 import org.example.services.CustomerServices;
 import org.example.services.ProductServices;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,19 +12,13 @@ public class Main {
 
     static Scanner sc = new Scanner(System.in);
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-    // Dao objects creation
-    static CustomerDao customerDao = new CustomerDaoImpl();
-    static ProductDao productDao = new ProductDaoImpl();
-    static OrderProcessRepository orderProcessRepository = new OrderProcessRepositoryImpl();
-
     // Service objects creation
     static CustomerServices customerService = new CustomerServices();
     static ProductServices productServices = new ProductServices();
     static CartServices cartService = new CartServices();
 
     public static void main(String[] args) throws IOException {
-        System.out.println("--------------------welcome to zmazoa---------------------");
+        System.out.println("--------------------welcome to zmazona---------------------");
 
         Customer customer = null;
         String userType = null;
@@ -93,7 +85,7 @@ public class Main {
         while(true) {
             System.out.println(
                     """
-                        
+                    
                     1. Browse Products
                     2. Search by name
                     3. Search by category
@@ -106,14 +98,14 @@ public class Main {
             switch (n) {
                 case 1: {
                     Product[] products = productServices.browseProducts();
-                    productServices.listProducts(products, customer);
+                    productServices.listProducts(products,"customer", customer);
                     break;
                 }
                 case 2: {
                     System.out.print("Search: ");
                     String term = br.readLine();
                     Product[] products = productServices.searchByName(term);
-                    productServices.listProducts(products, customer);
+                    productServices.listProducts(products,"customer", customer);
                     break;
                 }
                 case 3: {
@@ -121,7 +113,7 @@ public class Main {
                     String term = br.readLine();
                     Product[] products = productServices.searchByCategory(term);
 
-                    productServices.listProducts(products, customer);
+                    productServices.listProducts(products, "customer",customer);
                     break;
                 }
                 case 4: {
@@ -136,7 +128,61 @@ public class Main {
     }
 
     // TODO: Admin Interface implementation
-    public static void adminInterface() {
+    public static void adminInterface() throws IOException {
+        System.out.println("---------- ADMIN PANEL ----------");
 
+        while (true) {
+            System.out.println("""
+                
+                1. Add Product
+                2. Delete Product by ID
+                3. View Customer Orders
+                4. Back
+                """);
+
+            System.out.print("Select an option: ");
+            int n = sc.nextInt();
+            sc.nextLine();
+            switch (n) {
+                case 1 :
+                {
+                    System.out.println("\n--- Add New Product ---");
+
+                    System.out.print("Product name: ");
+                    String name = br.readLine();
+
+                    System.out.print("Product price: ");
+                    double price = sc.nextDouble();
+                    sc.nextLine();
+
+                    System.out.print("Product description: ");
+                    String desc = br.readLine();
+
+                    System.out.print("Product quantity: ");
+                    int quantity = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.print("Product category: ");
+                    String category = br.readLine();
+                    productServices.initProduct(name,price,desc,quantity,category);
+                    break;
+                }
+                case 2:
+                {
+                    System.out.println("Products  :");
+                    Product[] products = productServices.browseProducts();
+                    productServices.listProducts(products,"admin",null);
+                    System.out.println("Delete:");
+                    int id= sc.nextInt();
+                    productServices.deleteProduct(id);
+                    break;
+                }
+
+                case 4:
+                    return;
+
+            }
+
+        }
     }
 }

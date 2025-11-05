@@ -1,13 +1,8 @@
 package org.example.services;
-
 import org.example.dao.ProductDao;
 import org.example.dao.ProductDaoImpl;
 import org.example.entity.Customer;
 import org.example.entity.Product;
-import org.example.util.DBConnectionUtil;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ProductServices {
@@ -34,12 +29,10 @@ public class ProductServices {
         return products;
     }
 
-    public void listProducts(Product[] products, Customer customer) {
+    public void listProducts(Product[] products, String mode, Customer customer) {
 
         if(products.length == 0) {
             System.out.println("\n------No results were found------");
-            System.out.println("1. Back");
-            int n = sc.nextInt();
             return;
         }
 
@@ -53,13 +46,16 @@ public class ProductServices {
                         products[i].getPrice()
                 );
             }
+             
+            if(mode.equals("customer")) {
+              System.out.print("\u001B[1m100 Back\u001B[0m\n\nSelect product: ");
+              int n = sc.nextInt();
 
-            System.out.print("\u001B[1m100 Back\u001B[0m\n\nSelect product: ");
-            int n = sc.nextInt();
+              if(n == 100) return;
 
-            if(n == 100) return;
-
-            productDetails(products[n - 1], customer);
+              productDetails(products[n - 1], customer);
+            }
+            else return;
         }
     }
 
@@ -75,7 +71,7 @@ public class ProductServices {
             System.out.println("\u001B[31m Only " + product.getQuantity() + " left in stock!\u001B[0m");
         }
 
-        System.out.println("1. Add to Cart\n2. Back");
+        System.out.println("\n1. Add to Cart\n2. Back");
         int n = sc.nextInt();
 
         switch (n) {
@@ -85,5 +81,22 @@ public class ProductServices {
             case 2:
                 return;
         }
+    }
+    public void initProduct(String name, double price, String desc, int quantity, String category) {
+        Product p = new Product();
+        p.setPname(name);
+        p.setPrice(price);
+        p.setDesc(desc);
+        p.setQuantity(quantity);
+        p.setCategory(category);
+        boolean status=productDao.addProduct(p);
+        System.out.println("\n adding....\n");
+        System.out.println(status ? "Product added successfully!" : " Product failed to be added :(");
+
+    }
+    public void deleteProduct(int id){
+        boolean status=productDao.deleteProduct(id);
+        System.out.println("\ndeleting....\n");
+        System.out.println(status ? "Product has been deleted" : " Product failed to be deleted");
     }
 }
