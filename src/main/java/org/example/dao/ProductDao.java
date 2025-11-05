@@ -5,8 +5,8 @@ import java.sql.SQLException;
 
 public interface ProductDao {
    public boolean addProduct(Product p);
-   public boolean deleteProduct(long productId);
-   public boolean updateProduct(long productId, Product product);
+   public boolean deleteProduct(int productId);
+   public boolean updateProduct(int productId, Product product);
 
    /** Method to return products according to the column that you're searching from
    and the respective value, third argument (type) can have two values: search, peek
