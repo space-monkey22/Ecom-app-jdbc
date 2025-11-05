@@ -13,10 +13,12 @@ import java.util.Scanner;
 
 public class CustomerServices {
     CustomerDao customerDao = new CustomerDaoImpl();
+    CartServices cartServices = new CartServices();
+
     Scanner sc = new Scanner(System.in);
 
     public Customer loginCustomer() {
-        System.out.println("\u001B[34m------Customer Login------\u001B[0m");
+        System.out.println("\u001B[35m\n------Customer Login------\u001B[0m\n");
         System.out.print("Enter email: ");
         String email = sc.next();
 
@@ -25,11 +27,13 @@ public class CustomerServices {
 
         Customer customer = customerDao.authorizeUser(email, pwd);
 
+        if(customer == null) return null;
+
         return customer;
     }
 
     public void registerCustomer() {
-        System.out.println("\u001B[34m------Sign up------\u001B[0m");
+        System.out.println("\u001B[35m------Sign up------\u001B[0m");
         System.out.print("Name: ");
         String name = sc.nextLine();
 

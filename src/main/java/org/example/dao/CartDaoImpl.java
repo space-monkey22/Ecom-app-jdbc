@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CartDaoImpl implements CartDao {
 
@@ -23,6 +25,7 @@ public class CartDaoImpl implements CartDao {
 
             ps.execute();
             ps.close();
+            return true;
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -30,13 +33,25 @@ public class CartDaoImpl implements CartDao {
         return false;
     }
 
-    // TODO: Delete cart function
     @Override
     public boolean deleteCart(int cartId) {
+        try {
+            Connection conn = DBConnectionUtil.getConnection();
+            String sql = "DELETE FROM carts WHERE cart_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, cartId);
+
+            ps.execute();
+            ps.close();
+            return true;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
-    // TODO: Fetch cart function
     @Override
     public Cart fetchCart(Customer customer) {
         Cart cart = null;
@@ -53,7 +68,6 @@ public class CartDaoImpl implements CartDao {
                         rs.getInt("customer_id"),
                         rs.getInt("total_amount"),
                         rs.getBoolean("purchased"));
-                System.out.println("Cart created for user " + customer.getCustomer_name()); // testing
             }
             rs.close();
             ps.close();
@@ -62,6 +76,42 @@ public class CartDaoImpl implements CartDao {
             e.printStackTrace();
         }
         return cart;
+    }
+
+    @Override
+    public Product[] fetchCartProducts(int cartId) {
+        List<Product> productList = new ArrayList<>();
+        try {
+            Connection con = DBConnectionUtil.getConnection();
+
+            String sql = """
+                SELECT p.product_id, p.name, p.price, p.stock_quantity, p.category, p.description, ci.quantity
+                FROM cart_items ci
+                INNER JOIN products p ON ci.product_id = p.product_id
+                WHERE ci.cart_id = ?
+            """;
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, cartId);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Product product = new Product(
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getString("description"),
+                        rs.getInt("quantity"),
+                        rs.getString("category")
+                );
+                productList.add(product);
+            }
+            rs.close();
+            ps.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return productList.toArray(new Product[0]);
     }
 
     @Override
@@ -88,17 +138,12 @@ public class CartDaoImpl implements CartDao {
                 String sql2 = "INSERT INTO cart_items (cart_id, product_id, quantity, price) VALUES (?, ?, 1, ?)";
                 PreparedStatement ps2 = conn.prepareStatement(sql2);
 
-                System.out.println("\nAdding item..");
-                System.out.println("Name: " + product.getPname());
-                System.out.println("Id: " + product.getProduct_id());
-
                 ps2.setInt(1, cartId);
                 ps2.setInt(2, product.getProduct_id());
                 ps2.setDouble(3, product.getPrice());
 
                 ps2.execute();
                 ps2.close();
-                System.out.println("Product " + product.getPname() +" added to cart " + cartId); // testing
             }
             rs.close();
             ps.close();
@@ -111,7 +156,22 @@ public class CartDaoImpl implements CartDao {
     }
 
     @Override
-    public boolean removeProductFromCart(int cartId, Product product) {
+    public boolean deleteProductFromCart(int cartId, Product product) {
+        try {
+            Connection conn = DBConnectionUtil.getConnection();
+            String sql = "DELETE FROM cart_items WHERE cart_id = ? AND product_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, cartId);
+            ps.setInt(2, product.getProduct_id());
+
+            ps.execute();
+            ps.close();
+            return true;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }
