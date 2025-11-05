@@ -3,7 +3,7 @@ package org.example.entity;
 public class Product {
 
     private int product_id;
-    private String pname;
+    private String name;
     private String desc;
     private double price;
     private int quantity;
@@ -11,15 +11,16 @@ public class Product {
 
     public Product() {}
 
-    public Product(String pname, double price, String desc, int quantity, String category) {
-        this.pname = pname;
+    public Product(String name, double price, String desc, int quantity, String category) {
+        this.name = name;
         this.price = price;
         this.desc = desc;
         this.quantity = quantity;
         this.category = category;
     }
-    public Product(int product_id, String pname, double price, String desc, int quantity, String category){
-        this.pname = pname;
+
+    public Product(int product_id, String name, double price, String desc, int quantity, String category){
+        this.name = name;
         this.price = price;
         this.desc = desc;
         this.quantity = quantity;
@@ -27,12 +28,12 @@ public class Product {
         this.category = category;
     }
 
-    public String getPname() {
-        return pname;
+    public String getName() {
+        return name;
     }
 
-    public void setPname(String pname) {
-        this.pname = pname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getProduct_id() {
@@ -79,7 +80,7 @@ public class Product {
     public String toString() {
         return
                 "product_id=" + product_id +
-                ", pname='" + pname + '\'' +
+                ", pname='" + name + '\'' +
                 ", desc='" + desc + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity ;

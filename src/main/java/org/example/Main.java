@@ -1,6 +1,7 @@
 package org.example;
 import org.example.entity.Customer;
 import org.example.entity.Product;
+import org.example.services.CartServices;
 import org.example.services.CustomerServices;
 import org.example.services.ProductServices;
 import java.io.BufferedReader;
@@ -14,6 +15,7 @@ public class Main {
     // Service objects creation
     static CustomerServices customerService = new CustomerServices();
     static ProductServices productServices = new ProductServices();
+    static CartServices cartService = new CartServices();
 
     public static void main(String[] args) throws IOException {
         System.out.println("--------------------welcome to zmazona---------------------");
@@ -24,28 +26,33 @@ public class Main {
         // The menu
         while(true) {
             System.out.println("""
-                    Login as:
+                    \u001B[1mLogin as:\u001B[0m
                     1. Customer
                     2. Admin
-                    
                     3. Exit
                     """);
 
             int user = sc.nextInt();
             switch (user) {
                 case 1:
-                    System.out.println("1. Login\n2. Register");
-                    int n = sc.nextInt();
+                    while(true) {
+                        System.out.println("1. Login\n2. Register");
+                        int n = sc.nextInt();
 
-                    if (n == 1) {
-                        customer = customerService.loginCustomer();
-                    } else if (n == 2) {
-                        customerService.registerCustomer();
-                        customer = customerService.loginCustomer();
+                        if (n == 1) {
+                            customer = customerService.loginCustomer();
+                            if (customer == null) {
+                                System.out.println("\u001B[31mWrong password or email. Please try again.\u001B[0m");
+                                continue;
+                            }
+                        } else if (n == 2) {
+                            customerService.registerCustomer();
+                            customer = customerService.loginCustomer();
+                        }
+                        userType = "customer";
+                        break;
                     }
-                    userType = "customer";
                     break;
-
                 case 2:
                     while (true) {
                         System.out.print("Enter password: ");
@@ -74,7 +81,7 @@ public class Main {
     }
 
     static void customerInterface(Customer customer) throws IOException {
-        System.out.println("------Welcome " + customer.getCustomer_name() + "!------" );
+        System.out.println("\n\u001B[36m------Welcome " + customer.getCustomer_name() + "!------\u001B[0m" );
         while(true) {
             System.out.println(
                     """
@@ -107,6 +114,10 @@ public class Main {
                     Product[] products = productServices.searchByCategory(term);
 
                     productServices.listProducts(products, "customer",customer);
+                    break;
+                }
+                case 4: {
+                    cartService.viewCart(customer);
                     break;
                 }
                 case 5: {

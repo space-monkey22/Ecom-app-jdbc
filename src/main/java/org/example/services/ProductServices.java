@@ -36,19 +36,24 @@ public class ProductServices {
             return;
         }
 
-        System.out.println("\n------" + products.length + " result(s) were found------");
+        System.out.println("\n\u001B[36m------" + products.length + " result(s) were found------\u001B[0m");
         while(true) {
             System.out.println();
             for (int i = 0; i < products.length; i++) {
-                System.out.println((i+1+". | id: " + products[i].getProduct_id() + " | " + products[i].getPname() + " | " + products[i].getPrice()));
+                System.out.printf("%-3d %-25s | %6.2f%n",
+                        (i + 1),
+                        products[i].getName(),
+                        products[i].getPrice()
+                );
             }
+             
+            if(mode.equals("customer")) {
+              System.out.print("\u001B[1m100 Back\u001B[0m\n\nSelect product: ");
+              int n = sc.nextInt();
 
+              if(n == 100) return;
 
-            if(mode.equals("customer")){
-                System.out.print("100.Back\n\nSelect product: ");
-                int n = sc.nextInt();
-                if(n == 100) return;
-                productDetails(products[n-1], customer);
+              productDetails(products[n - 1], customer);
             }
             else return;
         }
@@ -57,7 +62,7 @@ public class ProductServices {
     public void productDetails(Product product, Customer customer) {
         System.out.println("------------------------");
         System.out.println("Product id: " + product.getProduct_id());
-        System.out.println("Name: " + product.getPname());
+        System.out.println("Name: " + product.getName());
         System.out.println("Price: " + product.getPrice());
         System.out.println("Description: " + product.getDesc());
         System.out.println("------------------------");
@@ -66,8 +71,6 @@ public class ProductServices {
             System.out.println("\u001B[31m Only " + product.getQuantity() + " left in stock!\u001B[0m");
         }
 
-
-        // TODO: Add to cart functionality for customer
         System.out.println("\n1. Add to Cart\n2. Back");
         int n = sc.nextInt();
 

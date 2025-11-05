@@ -15,7 +15,7 @@ public class ProductDaoImpl implements ProductDao{
             String sql = "INSERT INTO products (name, price, stock_quantity, category, description) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, p.getPname());
+            statement.setString(1, p.getName());
             statement.setDouble(2, p.getPrice());
             statement.setInt(3, p.getQuantity());
             statement.setString(4, p.getCategory());
