@@ -25,18 +25,31 @@ public class ProductDaoImpl implements ProductDao{
             return true;
         }
         catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
     // TODO: delete product functionality
-    public boolean deleteProduct(long product_id) {
-        return false;
+    public boolean deleteProduct(int product_id) {
+        try
+        {
+            Connection con= DBConnectionUtil.getConnection();
+            String query = "DELETE FROM products WHERE product_id = ?";
+            PreparedStatement statement= con.prepareStatement(query);
+            statement.setInt(1, product_id);
+            int rows = statement.executeUpdate();
+            con.close();
+            return rows>0;
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
+            return false;
+        }
     }
 
     // TODO: update product functionality
     @Override
-    public boolean updateProduct(long productId, Product product) {
+    public boolean updateProduct(int productId, Product product) {
         return false;
     }
 
