@@ -12,21 +12,22 @@ public class Main {
 
     static Scanner sc = new Scanner(System.in);
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
     // Service objects creation
     static CustomerServices customerService = new CustomerServices();
     static ProductServices productServices = new ProductServices();
     static CartServices cartService = new CartServices();
 
     public static void main(String[] args) throws IOException {
-        System.out.println("--------------------welcome to zmazona---------------------");
+        System.out.println("\n\u001B[35m--------------------WELCOME TO NOZAMA---------------------\u001B[0m");
 
-        Customer customer = null;
-        String userType = null;
+        Customer customer = new Customer();
+        String userType = "";
 
         // The menu
         while(true) {
             System.out.println("""
-                    \u001B[1mLogin as:\u001B[0m
+                    \n\u001B[1mLogin as:\u001B[0m
                     1. Customer
                     2. Admin
                     3. Exit
@@ -76,12 +77,14 @@ public class Main {
                 customerInterface(customer);
             } else if (userType.equals("admin")) {
                 adminInterface();
+            } else {
+                System.out.println("Something has gone wrong..");
             }
         }
     }
 
     static void customerInterface(Customer customer) throws IOException {
-        System.out.println("\n\u001B[36m------Welcome " + customer.getCustomer_name() + "!------\u001B[0m" );
+        System.out.println("\n\u001B[36m------Welcome " + customer.getCustomerName() + "!------\u001B[0m" );
         while(true) {
             System.out.println(
                     """
@@ -94,7 +97,6 @@ public class Main {
                     """);
             int n = sc.nextInt();
 
-            // TODO: View Cart Case for Customer
             switch (n) {
                 case 1: {
                     Product[] products = productServices.browseProducts();
@@ -127,7 +129,6 @@ public class Main {
         }
     }
 
-    // TODO: Admin Interface implementation
     public static void adminInterface() throws IOException {
         System.out.println("---------- ADMIN PANEL ----------");
 
@@ -175,6 +176,10 @@ public class Main {
                     System.out.println("Delete:");
                     int id= sc.nextInt();
                     productServices.deleteProduct(id);
+                    break;
+                }
+                case 3: {
+
                     break;
                 }
 

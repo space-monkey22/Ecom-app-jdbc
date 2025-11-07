@@ -5,7 +5,7 @@ public interface CustomerDao{
 
     public Customer authorizeUser(String email, String pwd);
     public boolean addCustomer(String name, String email, String phone, String pwd);
-    public boolean deleteCustomer(String id);
-    public boolean updateCustomer(String id, Customer customer);
-    public Customer fetchCustomer(String id);
+    public boolean deleteCustomer(int id);
+    public boolean updateCustomer(int id, Customer customer);
+    public Customer fetchCustomer(int id);
 }

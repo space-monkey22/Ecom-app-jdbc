@@ -29,7 +29,6 @@ public class ProductDaoImpl implements ProductDao{
         }
     }
 
-    // TODO: delete product functionality
     public boolean deleteProduct(int product_id) {
         try
         {
@@ -71,6 +70,7 @@ public class ProductDaoImpl implements ProductDao{
                 statement = conn.prepareStatement(query);
             }
 
+            assert statement != null;
             ResultSet ps = statement.executeQuery();
 
             while(ps.next()) {

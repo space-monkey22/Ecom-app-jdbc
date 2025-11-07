@@ -2,13 +2,10 @@ package org.example.dao;
 
 import org.example.entity.Customer;
 import org.example.entity.Product;
-import org.example.services.CartServices;
-import org.example.services.ProductServices;
 import org.example.util.DBConnectionUtil;
 
 import java.sql.*;
-import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class OrderProcessRepositoryImpl implements OrderProcessRepository {
