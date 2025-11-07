@@ -10,5 +10,5 @@ import java.util.Map;
 public interface OrderProcessRepository {
 
     public void placeOrder(Customer customer, Map<Product, Integer> orderItems, String shippingAddress);
-
+    public List<Map<Product,Integer>> getOrderbyID(int id);
 }

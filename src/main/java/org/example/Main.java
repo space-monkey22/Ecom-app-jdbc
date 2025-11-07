@@ -3,6 +3,7 @@ import org.example.entity.Customer;
 import org.example.entity.Product;
 import org.example.services.CartServices;
 import org.example.services.CustomerServices;
+import org.example.services.OrderServices;
 import org.example.services.ProductServices;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class Main {
     static CustomerServices customerService = new CustomerServices();
     static ProductServices productServices = new ProductServices();
     static CartServices cartService = new CartServices();
+    static OrderServices orderservices= new OrderServices();
 
     public static void main(String[] args) throws IOException {
         System.out.println("--------------------welcome to zmazona---------------------");
@@ -135,9 +137,10 @@ public class Main {
             System.out.println("""
                 
                 1. Add Product
-                2. Delete Product by ID
-                3. View Customer Orders
-                4. Back
+                2. Delete Product 
+                3. Update Product
+                4. View Customer Orders
+                5. Back
                 """);
 
             System.out.print("Select an option: ");
@@ -169,16 +172,23 @@ public class Main {
                 }
                 case 2:
                 {
-                    System.out.println("Products  :");
-                    Product[] products = productServices.browseProducts();
-                    productServices.listProducts(products,"admin",null);
-                    System.out.println("Delete:");
-                    int id= sc.nextInt();
-                    productServices.deleteProduct(id);
+                    productServices.deleteProduct();
+                    break;
+                }
+                case 3:
+                {
+                    productServices.updateProduct();
+                    break;
+                }
+                case 4:
+                {
+                    System.out.println("Enter customer id: ");
+                    int id=sc.nextInt();
+                    orderservices.customerorder(id);
                     break;
                 }
 
-                case 4:
+                case 5:
                     return;
 
             }

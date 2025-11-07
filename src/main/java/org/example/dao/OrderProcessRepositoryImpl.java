@@ -7,9 +7,8 @@ import org.example.services.ProductServices;
 import org.example.util.DBConnectionUtil;
 
 import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public class OrderProcessRepositoryImpl implements OrderProcessRepository {
 
@@ -65,4 +64,51 @@ public class OrderProcessRepositoryImpl implements OrderProcessRepository {
         }
         return total;
     }
+
+    public List<Map<Product,Integer>> getOrderbyID(int id) {
+        List<Map<Product, Integer>> orderList = new ArrayList<>();
+
+        String sql = """
+                    SELECT p.product_id, p.name, p.price, p.description, p.stock_quantity, p.category,
+                           oi.quantity
+                    FROM orders o
+                    JOIN order_items oi ON o.order_id = oi.order_id
+                    JOIN products p ON oi.product_id = p.product_id
+                    WHERE o.customer_id = ?
+                    ORDER BY o.order_id;
+                """;
+
+        try
+        {
+            Connection conn = DBConnectionUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getString("description"),
+                        rs.getInt("stock_quantity"),
+                        rs.getString("category")
+                );
+
+                int quantity = rs.getInt("quantity");
+
+                Map<Product, Integer> productEntry = new HashMap<>();
+                productEntry.put(product, quantity);
+
+                orderList.add(productEntry);
+            }
+
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orderList;
+    }
+
 }

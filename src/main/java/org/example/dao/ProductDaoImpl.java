@@ -29,7 +29,7 @@ public class ProductDaoImpl implements ProductDao{
         }
     }
 
-    // TODO: delete product functionality
+
     public boolean deleteProduct(int product_id) {
         try
         {
@@ -38,7 +38,7 @@ public class ProductDaoImpl implements ProductDao{
             PreparedStatement statement= con.prepareStatement(query);
             statement.setInt(1, product_id);
             int rows = statement.executeUpdate();
-            con.close();
+
             return rows>0;
         }
         catch (ClassNotFoundException | SQLException e)
@@ -47,9 +47,28 @@ public class ProductDaoImpl implements ProductDao{
         }
     }
 
-    // TODO: update product functionality
+
     @Override
     public boolean updateProduct(int productId, Product product) {
+
+        try
+        {
+            Connection con = DBConnectionUtil.getConnection();
+            String sql = "UPDATE products SET name=?, price=?, stock_quantity=?, category=?, description=? WHERE product_id=?";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());
+            ps.setInt(3, product.getQuantity());
+            ps.setString(4, product.getCategory());
+            ps.setString(5, product.getDesc());
+            ps.setInt(6, productId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (ClassNotFoundException|SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 

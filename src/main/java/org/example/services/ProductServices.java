@@ -46,16 +46,13 @@ public class ProductServices {
                         products[i].getPrice()
                 );
             }
-             
-            if(mode.equals("customer")) {
               System.out.print("\u001B[1m100 Back\u001B[0m\n\nSelect product: ");
               int n = sc.nextInt();
 
               if(n == 100) return;
 
               productDetails(products[n - 1], customer);
-            }
-            else return;
+
         }
     }
 
@@ -84,7 +81,7 @@ public class ProductServices {
     }
     public void initProduct(String name, double price, String desc, int quantity, String category) {
         Product p = new Product();
-        p.setPname(name);
+        p.setName(name);
         p.setPrice(price);
         p.setDesc(desc);
         p.setQuantity(quantity);
@@ -94,9 +91,120 @@ public class ProductServices {
         System.out.println(status ? "Product added successfully!" : " Product failed to be added :(");
 
     }
-    public void deleteProduct(int id){
-        boolean status=productDao.deleteProduct(id);
-        System.out.println("\ndeleting....\n");
-        System.out.println(status ? "Product has been deleted" : " Product failed to be deleted");
+    public void deleteProduct() {
+
+        Product[] products = browseProducts();
+
+        if (products.length == 0) {
+            System.out.println("\n------No results were found------");
+            return;
+        }
+
+        System.out.println("\n\u001B[36m------ Products List ------\u001B[0m");
+        System.out.println();
+
+        for (Product p : products) {
+            System.out.printf("ID: %-4d %-25s | ₹ %6.2f%n",
+                    p.getProduct_id(),
+                    p.getName(),
+                    p.getPrice()
+            );
+        }
+
+        System.out.print("\n\u001B[1mEnter Product ID to Delete (100 to cancel): \u001B[0m");
+        int id = sc.nextInt();
+
+        if (id == 100) return;
+        Product selected = null;
+        for (Product p : products) {
+            if (p.getProduct_id() == id) {
+                selected = p;
+                break;
+            }
+        }
+
+        if (selected == null) {
+            System.out.println("\u001B[31mInvalid Product ID.\u001B[0m");
+            return;
+        }
+
+        System.out.println("\n\u001B[33mAre you sure you want to delete:\u001B[0m "
+                + selected.getName() + " ?");
+        System.out.println("1. Yes\n2. No");
+        int confirm = sc.nextInt();
+
+        if (confirm == 1) {
+            boolean status = productDao.deleteProduct(selected.getProduct_id());
+            System.out.println(status
+                    ? "\u001B[32mProduct deleted successfully!\u001B[0m"
+                    : "\u001B[31mDelete failed.\u001B[0m");
+        }
     }
+
+    public void updateProduct()
+    {
+        System.out.println("\n\u001B[36m------ Update Product ------\u001B[0m");
+
+        // Show brief product list
+        Product[] products = browseProducts();
+        if (products.length == 0) {
+            System.out.println("\u001B[31mNo products available.\u001B[0m");
+            return;
+        }
+
+        System.out.println();
+        for (Product p : products) {
+            System.out.printf("ID: %-4d %-25s ₹%.2f%n", p.getProduct_id(), p.getName(), p.getPrice());
+        }
+
+        System.out.print("\nEnter Product ID to Update: ");
+        int id = sc.nextInt();
+        sc.nextLine(); // consume newline
+
+        // find the product in the list
+        Product target = null;
+        for (Product p : products) {
+            if (p.getProduct_id() == id) {
+                target = p;
+                break;
+            }
+        }
+
+        if (target == null) {
+            System.out.println("\u001B[31mInvalid Product ID.\u001B[0m");
+            return;
+        }
+
+        System.out.println("\nLeave blank to keep the same value.\n");
+
+        System.out.print("Name (" + target.getName() + "): ");
+        String name = sc.nextLine();
+        if (!name.isEmpty()) target.setName(name);
+
+        System.out.print("Price (" + target.getPrice() + "): ");
+        String priceInput = sc.nextLine();
+        if (!priceInput.isEmpty()) target.setPrice(Double.parseDouble(priceInput));
+
+        System.out.print("Quantity (" + target.getQuantity() + "): ");
+        String qtyInput = sc.nextLine();
+        if (!qtyInput.isEmpty()) target.setQuantity(Integer.parseInt(qtyInput));
+
+        System.out.print("Category (" + target.getCategory() + "): ");
+        String category = sc.nextLine();
+        if (!category.isEmpty()) target.setCategory(category);
+
+        System.out.print("Description (" + target.getDesc() + "): ");
+        String desc = sc.nextLine();
+        if (!desc.isEmpty()) target.setDesc(desc);
+
+        boolean status = productDao.updateProduct(id, target);
+
+        System.out.println(status
+                ? "\n\u001B[32mProduct updated successfully!\u001B[0m"
+                : "\n\u001B[31mFailed to update product.\u001B[0m");
+    }
+
+
+
+
 }
