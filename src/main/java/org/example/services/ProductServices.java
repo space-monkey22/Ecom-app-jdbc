@@ -30,7 +30,6 @@ public class ProductServices {
     }
 
     public void listProducts(Product[] products, String mode, Customer customer) {
-
         if(products.length == 0) {
             System.out.println("\n------No results were found------");
             return;
@@ -61,10 +60,10 @@ public class ProductServices {
 
     public void productDetails(Product product, Customer customer) {
         System.out.println("------------------------");
-        System.out.println("Product id: " + product.getProduct_id());
-        System.out.println("Name: " + product.getName());
-        System.out.println("Price: " + product.getPrice());
-        System.out.println("Description: " + product.getDesc());
+        System.out.println("\u001B[1mProduct id: \u001B[0m" + product.getProduct_id());
+        System.out.println("\u001B[1mName: \u001B[0m" + product.getName());
+        System.out.println("\u001B[1mPrice: \u001B[0m" + product.getPrice());
+        System.out.println("\u001B[1mDescription: \u001B[0m" + product.getDesc());
         System.out.println("------------------------");
 
         if(product.getQuantity() < 5) {
@@ -82,21 +81,25 @@ public class ProductServices {
                 return;
         }
     }
+
     public void initProduct(String name, double price, String desc, int quantity, String category) {
         Product p = new Product();
-        p.setPname(name);
+        p.setName(name);
         p.setPrice(price);
         p.setDesc(desc);
         p.setQuantity(quantity);
         p.setCategory(category);
-        boolean status=productDao.addProduct(p);
-        System.out.println("\n adding....\n");
-        System.out.println(status ? "Product added successfully!" : " Product failed to be added :(");
+
+        boolean status = productDao.addProduct(p);
+
+        System.out.println("\nAdding Product....\n");
+        System.out.println(status ? "\u001B[32mProduct added successfully!\u001B[0m" : "\u001B[31mProduct failed to be added :(\u001B[0m");
 
     }
+
     public void deleteProduct(int id){
-        boolean status=productDao.deleteProduct(id);
-        System.out.println("\ndeleting....\n");
+        boolean status = productDao.deleteProduct(id);
+        System.out.println("\nDeleting Product....\n");
         System.out.println(status ? "Product has been deleted" : " Product failed to be deleted");
     }
 }

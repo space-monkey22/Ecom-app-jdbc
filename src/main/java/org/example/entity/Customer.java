@@ -1,40 +1,46 @@
 package org.example.entity;
 
 public class Customer {
-    private String customer_name;
-    private int customer_id;
-    private String customer_email;
+    private String customerName;
+    private int customerId;
+    private String customerEmail;
     private String shippingAddress;
 
-    public Customer(){}
+    public Customer() {}
 
-    public Customer(String customer_name, int customer_id, String customer_email){
-        this.customer_email = customer_email;
-        this.customer_name = customer_name;
-        this.customer_id = customer_id;
+    public Customer(String customer_name, int customerId, String customerEmail) {
+        this.customerEmail = customerEmail;
+        this.customerName = customer_name;
+        this.customerId = customerId;
     }
-    public Customer(String customer_name, String customer_email){
-        this.customer_email = customer_email;
-        this.customer_name = customer_name;
+
+    public Customer(String customerName, String customerEmail){
+        this.customerEmail = customerEmail;
+        this.customerName = customerName;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public int getCustomerId() {
-        return customer_id;
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getCustomerEmail() {
-        return customer_email;
-    }
-    public void setCustomerEmail(String customer_email) {
-        this.customer_email = customer_email;
+        return customerEmail;
     }
 
-    public String getCustomer_name() {
-        return customer_name;
-    }
-
-    public void setCustomerName(String customer_name) {
-        this.customer_name = customer_name;
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 
     public String getShippingAddress() {
@@ -47,9 +53,11 @@ public class Customer {
 
     @Override
     public String toString() {
-        return
-                "customer_name='" + customer_name + '\'' +
-                ", customer_id=" + customer_id +
-                ", customer_email='" + customer_email ;
+        return "Customer{" +
+                "customerName = '" + customerName + '\'' +
+                ", customerId = " + customerId +
+                ", customerEmail = '" + customerEmail + '\'' +
+                ", shippingAddress = '" + shippingAddress + '\'' +
+                '}';
     }
 }

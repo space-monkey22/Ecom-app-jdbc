@@ -36,7 +36,7 @@ public class CartServices {
     public void viewCart(Customer customer) throws IOException {
         Cart cart = cartDao.fetchCart(customer);
         if(cart == null) {
-            System.out.println("\u001B[33mYour cart is empty, shop more!\u001B[0m");
+            System.out.println("\n\u001B[33mYour cart is empty, shop more!\u001B[0m");
             return;
         }
         Product[] products = cartDao.fetchCartProducts(cart.getCartId());
@@ -57,10 +57,11 @@ public class CartServices {
         System.out.printf("\u001B[1m%-5s %-20s %-10s %-10.2f%n\u001B[0m", "", "Total", "", total);
         System.out.println("-----------------------------------------------");
 
-        System.out.println("\u001B[1m1. Place Order\u001B[0m");
-        int n = Integer.parseInt(br.readLine());
-        System.out.println(n + " Customer shipping address: " + customer.getShippingAddress()); // testing
-        if(n == 1) {
+        // Options
+        System.out.println("\u001B[1m1. Place Order\u001B[0m\n2. Back\nPress item number followed by d (2d) to remove item from cart");
+        String n = br.readLine();
+
+        if(n.equals("1")) {
             if(customer.getShippingAddress() == null) {
                 System.out.println("Shipping Address: ");
                 String address = br.readLine();
@@ -73,18 +74,37 @@ public class CartServices {
             }
             orderProcessRepository.placeOrder(customer, map, customer.getShippingAddress());
             clearCart(customer);
+        } else if(n.equals("2")) {
+            return;
+        } else if(n.endsWith("d")){
+            try {
+                int index = Integer.parseInt(n.substring(0, n.length() - 1)) - 1;
+
+                if (index >= 0 && index < products.length) {
+                    Product toRemove = products[index];
+
+                    boolean status = cartDao.deleteProductFromCart(cart.getCartId(), toRemove);
+                    System.out.println(status ? "\n\u001B[33m" + toRemove.getName() + " removed from cart!\u001B[0m" :
+                            "\u001B[31mFailed to remove item from cart\u001B[0m");
+                } else {
+                    System.out.println("\n\u001B[31mInvalid item number!\u001B[0m[31mInvalid item number!\u001B[0m");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("\n\u001B[31mInvalid input format! Use like 2d to delete item 2.\u001B[0m");
+            }
         }
     }
 
     public void clearCart(Customer customer) {
-        // Delete cart items from cart_items table
+
         Cart cart = cartDao.fetchCart(customer);
         Product[] products = cartDao.fetchCartProducts(cart.getCartId());
 
+        // Delete cart items from cart_items table
         for(Product p: products) {
             cartDao.deleteProductFromCart(cart.getCartId(), p);
         }
-
+        // Delete cart from carts table
         cartDao.deleteCart(cart.getCartId());
     }
 }
