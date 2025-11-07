@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.entity.Customer;
+import org.example.exception.CustomerNotFoundException;
 import org.example.util.DBConnectionUtil;
 
 import java.sql.*;
@@ -25,21 +26,21 @@ public class CustomerDaoImpl implements CustomerDao {
     public Customer authorizeUser(String email, String pwd) {
         Customer customer = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("Select * from customers");
+            String sql = "SELECT * FROM customers WHERE email = ? AND password = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, pwd);
             ResultSet customers = ps.executeQuery();
-
-            while(customers.next()) {
-                if(email.equals(customers.getString("email"))
-                        && pwd.equals(customers.getString("password"))) {
-                    int id = customers.getInt("customer_id");
-                    String name = customers.getString("name");
-                    customer = new Customer(name, id, email);
-                }
+            if (!customers.next()) {
+                throw new CustomerNotFoundException("Invalid email or password!");
             }
 
-            ps.close();
-            customers.close();
+            int id = customers.getInt("customer_id");
+            String name = customers.getString("name");
 
+            customer = new Customer(name, id, email);
+            customers.close();
+            ps.close();
             return customer;
 
         } catch (SQLException e) {

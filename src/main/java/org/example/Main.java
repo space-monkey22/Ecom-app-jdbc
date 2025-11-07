@@ -188,10 +188,6 @@ public class Main {
                     orderservices.customerorder(id);
                     break;
                 }
-                case 3: {
-
-                    break;
-                }
 
                 case 5:
                     return;

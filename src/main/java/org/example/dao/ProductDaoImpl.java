@@ -1,5 +1,6 @@
 package org.example.dao;
 import org.example.entity.Product;
+import org.example.exception.ProductNotFoundException;
 import org.example.util.DBConnectionUtil;
 
 import java.sql.*;
@@ -95,6 +96,7 @@ public class ProductDaoImpl implements ProductDao{
             if(type.equals("search")) {
                 String query = "SELECT * FROM products WHERE " + col + " LIKE ?";
                 stmt = conn.prepareStatement(query);
+
                 stmt.setString(1, "%" + term + "%");
             }
             else if(type.equals("peek")) {
@@ -114,14 +116,14 @@ public class ProductDaoImpl implements ProductDao{
                         ps.getInt("stock_quantity"),
                         ps.getString("category")));
             }
-
+            if(type.equals("search")&& products.isEmpty()){
+                throw new ProductNotFoundException("Product is not found");
+            }
             ps.close();
             stmt.close();
 
-            Product[] productArray = new Product[products.size()];
-            for(int i = 0; i < productArray.length; i++) {
-                productArray[i] = products.get(i);
-            }
+
+            Product[] productArray = products.toArray(new Product[0]);
             return productArray;
 
         } catch (SQLException e) {

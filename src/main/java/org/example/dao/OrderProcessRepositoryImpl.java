@@ -2,9 +2,12 @@ package org.example.dao;
 
 import org.example.entity.Customer;
 import org.example.entity.Product;
+import org.example.exception.OrderNotFoundException;
+import org.example.exception.ProductNotFoundException;
 import org.example.util.DBConnectionUtil;
 
 import java.sql.*;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -112,7 +115,9 @@ public class OrderProcessRepositoryImpl implements OrderProcessRepository {
 
                 orderList.add(productEntry);
             }
-
+            if(orderList.isEmpty()){
+                throw new OrderNotFoundException("order not found");
+            }
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
