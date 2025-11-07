@@ -9,22 +9,37 @@ import java.util.List;
 
 public class ProductDaoImpl implements ProductDao{
 
+    private final Connection conn;
+
+    public ProductDaoImpl() {
+        try {
+            this.conn = DBConnectionUtil.getConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ProductDaoImpl(Connection conn) {
+        this.conn = conn;
+    }
+
     public boolean addProduct(Product p)  {
         try{
-            Connection connection = DBConnectionUtil.getConnection();
             String sql = "INSERT INTO products (name, price, stock_quantity, category, description) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
-            statement.setString(1, p.getName());
-            statement.setDouble(2, p.getPrice());
-            statement.setInt(3, p.getQuantity());
-            statement.setString(4, p.getCategory());
-            statement.setString(5,p.getDesc());
+            stmt.setString(1, p.getName());
+            stmt.setDouble(2, p.getPrice());
+            stmt.setInt(3, p.getQuantity());
+            stmt.setString(4, p.getCategory());
+            stmt.setString(5,p.getDesc());
 
-            statement.execute();
+            stmt.execute();
+            stmt.close();
+
             return true;
         }
-        catch (SQLException | ClassNotFoundException e) {
+        catch (SQLException e) {
             return false;
         }
     }
@@ -33,15 +48,14 @@ public class ProductDaoImpl implements ProductDao{
     public boolean deleteProduct(int product_id) {
         try
         {
-            Connection con= DBConnectionUtil.getConnection();
             String query = "DELETE FROM products WHERE product_id = ?";
-            PreparedStatement statement= con.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, product_id);
             int rows = statement.executeUpdate();
 
             return rows>0;
         }
-        catch (ClassNotFoundException | SQLException e)
+        catch (SQLException e)
         {
             return false;
         }
@@ -75,22 +89,21 @@ public class ProductDaoImpl implements ProductDao{
     @Override
     public Product[] fetchProducts(String col, String term, String type) {
         List<Product> products = new ArrayList<>();
-
         try {
-            Connection conn = DBConnectionUtil.getConnection();
-            PreparedStatement statement = null;
+            PreparedStatement stmt = null;
 
             if(type.equals("search")) {
                 String query = "SELECT * FROM products WHERE " + col + " LIKE ?";
-                statement = conn.prepareStatement(query);
-                statement.setString(1, "%" + term + "%");
+                stmt = conn.prepareStatement(query);
+                stmt.setString(1, "%" + term + "%");
             }
             else if(type.equals("peek")) {
                 String query = "SELECT * FROM products LIMIT 10";
-                statement = conn.prepareStatement(query);
+                stmt = conn.prepareStatement(query);
             }
 
-            ResultSet ps = statement.executeQuery();
+            assert stmt != null;
+            ResultSet ps = stmt.executeQuery();
 
             while(ps.next()) {
                 products.add(new Product(
@@ -103,7 +116,7 @@ public class ProductDaoImpl implements ProductDao{
             }
 
             ps.close();
-            statement.close();
+            stmt.close();
 
             Product[] productArray = new Product[products.size()];
             for(int i = 0; i < productArray.length; i++) {
@@ -111,7 +124,7 @@ public class ProductDaoImpl implements ProductDao{
             }
             return productArray;
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

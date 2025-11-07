@@ -2,21 +2,31 @@ package org.example.dao;
 
 import org.example.entity.Customer;
 import org.example.entity.Product;
-import org.example.services.CartServices;
-import org.example.services.ProductServices;
 import org.example.util.DBConnectionUtil;
 
 import java.sql.*;
-import java.util.*;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrderProcessRepositoryImpl implements OrderProcessRepository {
+
+    private final Connection conn;
+
+    public OrderProcessRepositoryImpl() {
+        try {
+            this.conn = DBConnectionUtil.getConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public OrderProcessRepositoryImpl(Connection conn) {
+        this.conn = conn;
+    }
 
     @Override
     public void placeOrder(Customer customer, Map<Product, Integer> orderItems, String shippingAddress) {
         try {
-            Connection conn = DBConnectionUtil.getConnection();
-
             // Create Order
             String sql1 = "INSERT INTO orders (customer_id, amount, shipping_address) VALUES (?, ?, ?)";
             PreparedStatement ps1 = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
@@ -52,7 +62,7 @@ public class OrderProcessRepositoryImpl implements OrderProcessRepository {
 
             System.out.println("\n\u001B[36mYour order has been placed, thanks for shopping!\u001B[0m");
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
