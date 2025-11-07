@@ -4,16 +4,27 @@ import org.example.entity.Customer;
 import org.example.util.DBConnectionUtil;
 
 import java.sql.*;
-import java.util.Scanner;
 
 public class CustomerDaoImpl implements CustomerDao {
-    Scanner sc = new Scanner(System.in);
+
+    private final Connection conn;
+
+    public CustomerDaoImpl() {
+        try {
+            this.conn = DBConnectionUtil.getConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CustomerDaoImpl(Connection conn) {
+        this.conn = conn;
+    }
 
     @Override
     public Customer authorizeUser(String email, String pwd) {
         Customer customer = null;
         try {
-            Connection conn = DBConnectionUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement("Select * from customers");
             ResultSet customers = ps.executeQuery();
 
@@ -31,7 +42,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
             return customer;
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -39,7 +50,6 @@ public class CustomerDaoImpl implements CustomerDao {
     @Override
     public boolean addCustomer(String name, String email, String phone, String pwd) {
         try {
-            Connection conn = DBConnectionUtil.getConnection();
             String sql = "INSERT INTO customers (name, email, phone, password) VALUES (?, ?, ?, ?)";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -52,7 +62,7 @@ public class CustomerDaoImpl implements CustomerDao {
             ps.close();
             return true;
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -60,7 +70,6 @@ public class CustomerDaoImpl implements CustomerDao {
     @Override
     public boolean deleteCustomer(int id) {
         try {
-            Connection conn = DBConnectionUtil.getConnection();
             String sql = "DELETE FROM customers WHERE customer_id = ?";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -69,7 +78,7 @@ public class CustomerDaoImpl implements CustomerDao {
             ps.execute();
             ps.close();
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return true;
@@ -85,7 +94,6 @@ public class CustomerDaoImpl implements CustomerDao {
     public Customer fetchCustomer(int id) {
         Customer customer = new Customer();
         try {
-            Connection conn = DBConnectionUtil.getConnection();
             String sql = "SELECT * FROM customers WHERE customer_id = ?";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -102,7 +110,7 @@ public class CustomerDaoImpl implements CustomerDao {
             rs.close();
             ps.close();
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return customer;
