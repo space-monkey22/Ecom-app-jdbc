@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OrderProcessRepositoryImpl implements OrderProcessRepository {
-
+    ProductDao productDao = new ProductDaoImpl();
     private final Connection conn;
 
     public OrderProcessRepositoryImpl() {
@@ -50,7 +50,7 @@ public class OrderProcessRepositoryImpl implements OrderProcessRepository {
             ps1.close();
 
             // Insert order items into order_items table
-            for(Product p: orderItems.keySet()) {
+            for (Product p : orderItems.keySet()) {
                 String sql2 = "INSERT INTO order_items (order_id, product_id, quantity, price) values (?, ?, ?, ?)";
                 PreparedStatement ps2 = conn.prepareStatement(sql2);
 
@@ -61,6 +61,10 @@ public class OrderProcessRepositoryImpl implements OrderProcessRepository {
 
                 ps2.execute();
                 ps2.close();
+                for(int i = 0; i<orderItems.get(p);i++)
+                {
+                    decrementStock(p, orderItems.get(p));
+                }
             }
 
             System.out.println("\n\u001B[36mYour order has been placed, thanks for shopping!\u001B[0m");
@@ -69,6 +73,22 @@ public class OrderProcessRepositoryImpl implements OrderProcessRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean decrementStock(Product p, int qty) {
+        String sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, qty);
+            ps.setInt(2, p.getProduct_id());
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 
     public double calculateTotal(Map<Product, Integer> orderItems) {
         double total = 0;
